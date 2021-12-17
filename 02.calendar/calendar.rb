@@ -31,7 +31,7 @@ def calender(i,o,days,beginning)
       elsif day >= 10 && count % 7 == 0
         puts day.to_s.center(3)
       else
-        print day.to_s.center(3)#dayとtodayが同じ場合に色を反転させたい
+        print day.to_s.center(3)
       end
     end
     puts " "
