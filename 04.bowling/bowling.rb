@@ -12,23 +12,30 @@ end
 
 frames = []
 shots.each_slice(2) do |s| #フレーム毎に分割
-    frames << s
+  frames << s
 end
 
-
+def strike_score_plus(frames,count)
+  if frames[count][0] == 10
+      10 + 10 + frames[count + 1][0]
+    else
+      10 + frames[count].sum
+    end
+end
 
 point = 0
 count = 0
 frames.each do |frame|
   count += 1
+  print frame
+  print "#{count}回目"
   if frame[0] == 10 && count < 10 # strike
-    p frames[count]
-    point += (10 + frames[count].sum) #次のフレームの一投目と二投目を加算するには
+    point += strike_score_plus(frames,count)
   elsif frame.sum == 10 && count < 10 # spare
     point += (frame.sum + frames[count][0])
   else
     point += frame.sum
   end
+  puts point
 end
 puts point
-
