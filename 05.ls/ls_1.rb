@@ -2,16 +2,14 @@
 
 require 'optparse' # オプション
 
-find_files = Dir.glob('*')
-countfile = find_files.map(&:length).max # 最大文字数を算出
+file_names = Dir.glob('*')
+countfile = file_names.map(&:length).max # 最大文字数を算出
 
-files_count = find_files.count
-quotient = files_count.divmod(3)[0] # 商
-surplus = files_count.divmod(3)[1] # 余り
-
+files_count = file_names.count
+quotient, surplus = files_count.divmod(3) #商と余り
 quotient += 1 if surplus.positive?
 
-slice_files = find_files.each_slice(quotient).to_a
+slice_files = file_names.each_slice(quotient).to_a
 
 max_array_size = slice_files.map(&:size).max
 files_transposed = slice_files.map { |file| (file + [nil] * max_array_size)[0...max_array_size] }.transpose # 配列の要素数を揃える
