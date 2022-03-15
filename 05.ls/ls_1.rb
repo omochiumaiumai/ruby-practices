@@ -13,7 +13,7 @@ slice_files = file_names.each_slice(quotient).to_a
 max_array_size = slice_files.map(&:size).max
 
 transposed_files = slice_files.map { |file| (file + [' '] * max_array_size)[0...max_array_size] }.transpose # 配列の要素数を揃える
-columns_max_string = transposed_files.transpose.map { |array| array.sort_by(&:length).last.length }
+columns_max_string = transposed_files.transpose.map { |array| array.max_by(&:length).length }
 
 ljusted_files = []
 transposed_files.each do |array|
