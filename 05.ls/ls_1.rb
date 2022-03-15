@@ -15,17 +15,11 @@ max_array_size = slice_files.map(&:size).max
 transposed_files = slice_files.map { |file| (file + [' '] * max_array_size)[0...max_array_size] }.transpose # 配列の要素数を揃える
 columns_max_string = transposed_files.transpose.map { |array| array.sort_by(&:length).last.length }
 
-line_one = []
+ljusted_files = []
 transposed_files.each do |array|
-  line_one << array[0].ljust(columns_max_string[0], ' ')
-end
-line_two = []
-transposed_files.each do |array|
-  line_two << array[1].ljust(columns_max_string[1], ' ')
-end
-line_three = []
-transposed_files.each do |array|
-  line_three << array[2].ljust(columns_max_string[2], ' ')
+  ljusted_files << array.map.with_index { |item, column_index| item.ljust(columns_max_string[column_index]) }
 end
 
-line_one.zip(line_two, line_three) { |arary| puts arary.join(' ' * countfile) }
+ljusted_files.each do |array|
+  puts array.join(' ' * countfile)
+end
