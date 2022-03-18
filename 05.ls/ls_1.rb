@@ -2,9 +2,11 @@
 
 require 'optparse' # オプション
 
-option = ARGV.getopts('a')
-file_names = if option.value?(true)
+option = ARGV.getopts('a', 'r')
+file_names = if option.fetch('a')
                Dir.glob('*', File::FNM_DOTMATCH)
+             elsif option.fetch('r')
+               Dir.glob('*').reverse
              else
                Dir.glob('*')
              end
