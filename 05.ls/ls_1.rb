@@ -2,12 +2,10 @@
 
 require 'optparse' # オプション
 
-option = ARGV.getopts('a')
-file_names = if option.value?(true)
-               Dir.glob('*', File::FNM_DOTMATCH)
-             else
-               Dir.glob('*')
-             end
+option = ARGV.getopts('a', 'r')
+
+file_names = option['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+file_names.reverse! if option['r']
 
 countfile = file_names.map(&:length).max # 最大文字数を算出
 
