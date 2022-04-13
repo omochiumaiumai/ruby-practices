@@ -46,13 +46,13 @@ status_columns_maxstring = files_zip.transpose.map { |array| array.max_by(&:leng
 
 # 出力
 if option['l']
-  (puts "total #{file_blocks.sum}"
-   files_zip.each do |array|
-     files_status = array.map.with_index do |item, column_index|
-       column_index == 7 ? item.ljust(status_columns_maxstring[column_index]) : item.rjust(status_columns_maxstring[column_index])
-     end
-     puts files_status.join(' ' * 2)
-   end)
+  puts "total #{file_blocks.sum}"
+  files_zip.each do |array|
+    files_status = array.map.with_index do |item, column_index|
+      column_index == 7 ? item.ljust(status_columns_maxstring[column_index]) : item.rjust(status_columns_maxstring[column_index])
+    end
+    puts files_status.join(' ' * 2)
+  end
 end
 
 unless option['l']
