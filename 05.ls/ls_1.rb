@@ -20,8 +20,8 @@ transposed_files = slice_files.map { |file| (file + [' '] * max_array_size)[0...
 columns_max_string = transposed_files.transpose.map { |array| array.max_by(&:length).length }
 
 # パーミッション
-types = { 'file' => '-', 'directory' => 'd', ' characterSpecial' => 'c', 'blockSpecial' => 'b', 'link' => 'l', 'fifo' => 'p', 'socket' => 's' }
-files_type = status.map { |file| types[file.ftype] }
+TYPES = { 'file' => '-', 'directory' => 'd', ' characterSpecial' => 'c', 'blockSpecial' => 'b', 'link' => 'l', 'fifo' => 'p', 'socket' => 's' }.freeze
+files_type = status.map { |file| TYPES[file.ftype] }
 
 octal_permissions = status.map { |decimal| (decimal.mode.to_s(8).to_i % 1000).digits.reverse }
 rwx = { 0 => '---', 1 => '--x', 2 => '-w-', 3 => '-wx', 4 => 'r--', 5 => 'r-x', 6 => 'rw-', 7 => 'rwx' }
