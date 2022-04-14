@@ -24,9 +24,9 @@ TYPES = { 'file' => '-', 'directory' => 'd', ' characterSpecial' => 'c', 'blockS
 files_type = status.map { |file| TYPES[file.ftype] }
 
 octal_permissions = status.map { |decimal| (decimal.mode.to_s(8).to_i % 1000).digits.reverse }
-rwx = { 0 => '---', 1 => '--x', 2 => '-w-', 3 => '-wx', 4 => 'r--', 5 => 'r-x', 6 => 'rw-', 7 => 'rwx' }
+RWX = { 0 => '---', 1 => '--x', 2 => '-w-', 3 => '-wx', 4 => 'r--', 5 => 'r-x', 6 => 'rw-', 7 => 'rwx' }.freeze
 rwx_permissions = octal_permissions.each do |array|
-  array.map! { |octal| rwx[octal] }
+  array.map! { |octal| RWX[octal] }
   array.join
 end
 files_permission = files_type.zip(rwx_permissions).map(&:join)
