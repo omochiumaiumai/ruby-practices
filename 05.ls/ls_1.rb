@@ -3,10 +3,21 @@
 require 'optparse' # オプション
 require 'etc'
 
-option = ARGV.getopts('a', 'r', 'l')
-file_names = option['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-file_names.reverse! if option['r']
-status = file_names.map { |file| File.lstat(file) }
+class DirSelect
+  def option_select(options)
+    @file_names = options['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+    file_names.reverse! if options['r']
+  end
+  attr_reader :file_names
+end
+
+options = ARGV.getopts('a', 'r', 'l')
+
+option = DirSelect.new
+option.option_select(options)
+
+file_names = option.file_names
+status = option.file_names.map { |file| File.lstat(file) }
 
 countfile = file_names.map(&:length).max # 最大文字数を算出
 files_count = file_names.count
@@ -45,7 +56,7 @@ files_zip = files_permission.zip(hard_links, user, groups, file_size, update_day
 status_columns_maxstring = files_zip.transpose.map { |array| array.max_by(&:length).length }
 
 # 出力
-if option['l']
+if options['l']
   puts "total #{file_blocks.sum}"
   files_zip.each do |array|
     files_status = array.map.with_index do |item, column_index|
@@ -55,7 +66,7 @@ if option['l']
   end
 end
 
-unless option['l']
+unless options['l']
   transposed_files.each do |array|
     ljusted_files = array.map.with_index { |item, column_index| item.ljust(columns_max_string[column_index]) }
     puts ljusted_files.join(' ' * countfile)
