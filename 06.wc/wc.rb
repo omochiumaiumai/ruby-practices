@@ -1,66 +1,88 @@
 # frozen_string_literal: true
 
+require 'readline'
 require 'optparse'
 
-def pipe_input
-  @specified_file = $stdin.to_a
-  @lines = @specified_file.count
-  @words = @specified_file.map { |array| array.delete("\n") }
-  @byte_size = @words.join.bytesize
-  @words = @words.map { |array| array.split.count }.sum
-  @various_data = [[@lines, @words, @byte_size]]
-  @total = ['']
+def input_check
+  if File.pipe?($stdin)
+    [$stdin.to_a]
+  else
+    ARGV.map { |file| File.open(file, 'r').readlines }
+  end
 end
 
-def command_line_input
-  @specified_file = ARGV
-  open_files = @specified_file.map { |file| File.open(file, 'r') }
-  @words = open_files.map { |file| file.read.split.count }
-
-  open_files = @specified_file.map { |file| File.open(file, 'r') }
-  @lines = open_files.map { |file| file.read.count("\n") }
-
-  open_files = @specified_file.map { |file| File.open(file, 'r') }
-  @byte_size = open_files.map { |file| file.read.bytesize }
-
-  @various_data = @lines.zip(@words, @byte_size, @specified_file)
-
-  @total = [@lines.sum, @words.sum, @byte_size.sum]
+def file_names_get
+  if ARGV.any?
+    ARGV
+  else
+    [' ']
+  end
 end
 
-options = ARGV.getopts('c', 'l', 'w')
+def calculate_values(entered_files)
+  entered_files.map! do |files|
+    files.map { |file| file.delete("\n") }
+  end
 
-if File.pipe?($stdin) == true
-  pipe_input
-else
-  command_line_input
+  lines = entered_files.map(&:count)
+  words = entered_files.map do |files|
+    files.map { |file| file.split.count }.sum
+  end
+  byte_size = entered_files.map do |files|
+    files.map(&:bytesize).sum
+  end
+
+  lines.zip(words, byte_size)
 end
 
-ljusted_files = if options.values.any? == true
-                  @various_data.each do |array|
-                    array.delete_at(2) unless options['c']
-                    array.delete_at(1) unless options['w']
-                    array.delete_at(0) unless options['l']
-                  end
-                else
-                  @various_data
-                end
-if options.values.any? == false
-  @total
-else
-  @total.delete_at(2) unless options['c']
-  @total.delete_at(1) unless options['w']
-  @total.delete_at(0) unless options['l']
+def options_select(values, options)
+  if options.values.any? == false
+    values
+  else
+    values.delete_at(2) unless options['c']
+    values.delete_at(1) unless options['w']
+    values.delete_at(0) unless options['l']
+  end
 end
-@total.map! { |total_value| total_value.to_s.rjust(8, ' ') }
-@total.push(' total')
 
-files = ljusted_files.count
+def prepare_output(file_values, file_names, total_values, options)
+  file_values.map! do |values|
+    values.map { |value| value.to_s.rjust(8, ' ') }
+  end
+  file_values = file_values.transpose
+  options_select(file_values, options)
 
-ljusted_files.map! do |array|
-  array.map! { |value_and_filename| value_and_filename.to_s.rjust(8, ' ') }
-  array.insert(-2, ' ') unless array.count == 1
-  array.join
+  total_values.map!(&:sum)
+  total_values.map! { |value| value.to_s.rjust(8, ' ') }
+  total_values.insert(-1, ' ', 'total')
+  options_select(total_values, options)
+
+  max_character = file_names.max.length
+  file_names.map! { |file_name| file_name.ljust(max_character, ' ') }
+
+  file_values = file_values.push(file_names).transpose
+  file_values.map! do |values|
+    values.insert(-2, ' ')
+    values.join
+  end
 end
-puts ljusted_files
-puts @total.join if files > 1
+
+def output(values_and_filenames, total_values)
+  values_and_filenames.each do |values|
+    puts values
+  end
+  puts total_values.join if values_and_filenames.count > 1
+end
+
+def main
+  options = ARGV.getopts('c', 'l', 'w')
+  entered_files = input_check
+  file_values = calculate_values(entered_files)
+  file_names = file_names_get
+  total_values = file_values.transpose
+
+  values_and_filenames = prepare_output(file_values, file_names, total_values, options)
+  output(values_and_filenames, total_values)
+end
+
+main
