@@ -15,7 +15,7 @@ def file_names_get
   if ARGV.any?
     ARGV
   else
-    [' ']
+    ['']
   end
 end
 
