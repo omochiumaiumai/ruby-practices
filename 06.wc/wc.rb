@@ -11,7 +11,7 @@ def input_check
   end
 end
 
-def file_names_get
+def collect_file_names
   if ARGV.any?
     ARGV
   else
@@ -78,7 +78,7 @@ def main
   options = ARGV.getopts('c', 'l', 'w')
   entered_files = input_check
   file_values = calculate_values(entered_files)
-  file_names = file_names_get
+  file_names = collect_file_names
   total_values = file_values.transpose
 
   values_and_filenames = prepare_output(file_values, file_names, total_values, options)
