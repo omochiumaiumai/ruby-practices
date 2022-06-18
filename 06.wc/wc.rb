@@ -3,7 +3,7 @@
 require 'readline'
 require 'optparse'
 
-def input_check
+def check_input_source 
   if File.pipe?($stdin)
     [$stdin.to_a]
   else
@@ -76,7 +76,7 @@ end
 
 def main
   options = ARGV.getopts('c', 'l', 'w')
-  entered_files = input_check
+  entered_files = check_input_source 
   file_values = calculate_values(entered_files)
   file_names = collect_file_names
   total_values = file_values.transpose
