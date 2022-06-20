@@ -3,7 +3,7 @@
 require 'readline'
 require 'optparse'
 
-def check_input_source 
+def check_input_source
   if File.pipe?($stdin)
     [$stdin.to_a]
   else
@@ -11,7 +11,7 @@ def check_input_source
   end
 end
 
-def collect_file_names
+def collect_filename_stored_array
   if ARGV.any?
     ARGV
   else
@@ -19,16 +19,16 @@ def collect_file_names
   end
 end
 
-def calculate_values(entered_files)
-  entered_files.map! do |files|
+def calculate_values(strings_in_files)
+  strings_in_files.map! do |files|
     files.map { |file| file.delete("\n") }
   end
 
-  lines = entered_files.map(&:count)
-  words = entered_files.map do |files|
+  lines = strings_in_files.map(&:count)
+  words = strings_in_files.map do |files|
     files.map { |file| file.split.count }.sum
   end
-  byte_size = entered_files.map do |files|
+  byte_size = strings_in_files.map do |files|
     files.map(&:bytesize).sum
   end
 
@@ -45,23 +45,23 @@ def options_select(values, options)
   end
 end
 
-def prepare_output(file_values, file_names, total_values, options)
-  file_values.map! do |values|
+def prepare_output(file_calculation_results, filename_stored_array, total_values, options)
+  file_calculation_results.map! do |values|
     values.map { |value| value.to_s.rjust(8, ' ') }
   end
-  file_values = file_values.transpose
-  options_select(file_values, options)
+  file_calculation_results = file_calculation_results.transpose
+  options_select(file_calculation_results, options)
 
   total_values.map!(&:sum)
   total_values.map! { |value| value.to_s.rjust(8, ' ') }
   total_values.insert(-1, ' ', 'total')
   options_select(total_values, options)
 
-  max_character = file_names.max.length
-  file_names.map! { |file_name| file_name.ljust(max_character, ' ') }
+  max_character = filename_stored_array.max.length
+  filename_stored_array.map! { |file_name| file_name.ljust(max_character, ' ') }
 
-  file_values = file_values.push(file_names).transpose
-  file_values.map! do |values|
+  file_calculation_results = file_calculation_results.push(filename_stored_array).transpose
+  file_calculation_results.map! do |values|
     values.insert(-2, ' ')
     values.join
   end
@@ -76,12 +76,12 @@ end
 
 def main
   options = ARGV.getopts('c', 'l', 'w')
-  entered_files = check_input_source 
-  file_values = calculate_values(entered_files)
-  file_names = collect_file_names
-  total_values = file_values.transpose
+  strings_in_files = check_input_source
+  file_calculation_results = calculate_values(strings_in_files)
+  filename_stored_array = collect_filename_stored_array
+  total_values = file_calculation_results.transpose
 
-  values_and_filenames = prepare_output(file_values, file_names, total_values, options)
+  values_and_filenames = prepare_output(file_calculation_results, filename_stored_array, total_values, options)
   output(values_and_filenames, total_values)
 end
 
