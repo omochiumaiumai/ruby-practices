@@ -45,12 +45,12 @@ def options_select(values, options)
   end
 end
 
-def prepare_output(file_calculation_results, file_names, total_values, options)
-  file_calculation_results.map! do |values|
+def prepare_output(calculated_values, file_names, total_values, options)
+  calculated_values.map! do |values|
     values.map { |value| value.to_s.rjust(8, ' ') }
   end
-  file_calculation_results = file_calculation_results.transpose
-  options_select(file_calculation_results, options)
+  calculated_values = calculated_values.transpose
+  options_select(calculated_values, options)
 
   total_values.map!(&:sum)
   total_values.map! { |value| value.to_s.rjust(8, ' ') }
@@ -60,8 +60,8 @@ def prepare_output(file_calculation_results, file_names, total_values, options)
   max_character = file_names.max.length
   file_names.map! { |file_name| file_name.ljust(max_character, ' ') }
 
-  file_calculation_results = file_calculation_results.push(file_names).transpose
-  file_calculation_results.map! do |values|
+  calculated_values = calculated_values.push(file_names).transpose
+  calculated_values.map! do |values|
     values.insert(-2, ' ')
     values.join
   end
@@ -77,11 +77,11 @@ end
 def main
   options = ARGV.getopts('c', 'l', 'w')
   strings_in_files = check_input_source
-  file_calculation_results = calculate_values(strings_in_files)
+  calculated_values = calculate_values(strings_in_files)
   file_names = collect_file_names
-  total_values = file_calculation_results.transpose
+  total_values = calculated_values.transpose
 
-  values_and_filenames = prepare_output(file_calculation_results, file_names, total_values, options)
+  values_and_filenames = prepare_output(calculated_values, file_names, total_values, options)
   output(values_and_filenames, total_values)
 end
 
