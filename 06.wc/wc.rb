@@ -36,13 +36,13 @@ def calculate_values(strings_in_files)
 end
 
 def options_select(values, options)
-  if options.values.any? == false
-    values
-  else
-    values.delete_at(2) unless options['c']
-    values.delete_at(1) unless options['w']
-    values.delete_at(0) unless options['l']
-  end
+  return values if !options['c'] && !options['w'] && !options['l']
+
+  values_hash = { line_count: values[0], word_count: values[1], character_count: values[2] }
+  values_hash.delete(:character_count) unless options['c']
+  values_hash.delete(:word_count) unless options['w']
+  values_hash.delete(:line_count) unless options['l']
+  values_hash.values
 end
 
 def prepare_output(calculated_values, file_names, total_values, options)
@@ -50,13 +50,12 @@ def prepare_output(calculated_values, file_names, total_values, options)
     values.map { |value| value.to_s.rjust(8, ' ') }
   end
   calculated_values = calculated_values.transpose
-  options_select(calculated_values, options)
+  calculated_values = options_select(calculated_values, options)
 
   total_values.map!(&:sum)
   total_values.map! { |value| value.to_s.rjust(8, ' ') }
+  total_values = options_select(total_values, options)
   total_values.insert(-1, ' ', 'total')
-  options_select(total_values, options)
-
   max_character = file_names.max.length
   file_names.map! { |file_name| file_name.ljust(max_character, ' ') }
 
@@ -65,13 +64,12 @@ def prepare_output(calculated_values, file_names, total_values, options)
     values.insert(-2, ' ')
     values.join
   end
+  { calculated_values: calculated_values, total_values: total_values.join }
 end
 
-def output(values_and_filenames, total_values)
-  values_and_filenames.each do |values|
-    puts values
-  end
-  puts total_values.join if values_and_filenames.count > 1
+def output(values_and_filenames)
+  puts values_and_filenames[:calculated_values]
+  puts values_and_filenames[:total_values] if values_and_filenames[:calculated_values].count > 1
 end
 
 def main
@@ -80,9 +78,8 @@ def main
   calculated_values = calculate_values(strings_in_files)
   file_names = collect_file_names
   total_values = calculated_values.transpose
-
   values_and_filenames = prepare_output(calculated_values, file_names, total_values, options)
-  output(values_and_filenames, total_values)
+  output(values_and_filenames)
 end
 
 main
