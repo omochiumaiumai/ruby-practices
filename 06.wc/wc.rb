@@ -45,7 +45,8 @@ def options_select(values, options)
   values_hash.values
 end
 
-def prepare_output(calculated_values, file_names, total_values, options)
+def prepare_output(calculated_values, file_names, options)
+  total_values = calculated_values.transpose
   calculated_values.map! do |values|
     values.map { |value| value.to_s.rjust(8, ' ') }
   end
@@ -77,8 +78,7 @@ def main
   strings_in_files = check_input_source
   calculated_values = calculate_values(strings_in_files)
   file_names = collect_file_names
-  total_values = calculated_values.transpose
-  values_and_filenames = prepare_output(calculated_values, file_names, total_values, options)
+  values_and_filenames = prepare_output(calculated_values, file_names, options)
   output(values_and_filenames)
 end
 
