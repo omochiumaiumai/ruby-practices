@@ -56,7 +56,7 @@ def prepare_output(calculated_values, file_names, options)
   total_values.map!(&:sum)
   total_values.map! { |value| value.to_s.rjust(8, ' ') }
   total_values = options_select(total_values, options)
-  total_values.insert(-1, ' ', 'total')
+  total_values += [' ', 'total']
   max_length = file_names.max.length
   file_names.map! { |file_name| file_name.ljust(max_length, ' ') }
 
