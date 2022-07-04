@@ -19,7 +19,7 @@ def collect_file_names
   end
 end
 
-def calculate_values(strings_in_files)
+def calculate_values(strings_in_files, options)
   strings_in_files.map! do |files|
     files.map { |file| file.delete("\n") }
   end
@@ -33,7 +33,11 @@ def calculate_values(strings_in_files)
   end
 
   values = lines.zip(words, byte_size).transpose
-  { line_count: values[0], word_count: values[1], character_count: values[2] }
+  values_and_total_values = { line_count: values[0], word_count: values[1], character_count: values[2] }
+  values_and_total_values = options_select(values_and_total_values, options)
+
+  values_and_total_values[:total_values] = values_and_total_values.values.map(&:sum)
+  values_and_total_values
 end
 
 def options_select(values_hash, options)
@@ -43,12 +47,6 @@ def options_select(values_hash, options)
   values_hash.delete(:word_count) unless options['w']
   values_hash.delete(:line_count) unless options['l']
   values_hash
-end
-
-def prepare_output(calculated_values, options)
-  calculated_values = options_select(calculated_values, options)
-  calculated_values[:total_values] = calculated_values.values.map(&:sum)
-  calculated_values
 end
 
 def output(values_and_total_values)
@@ -77,8 +75,7 @@ end
 def main
   options = ARGV.getopts('c', 'l', 'w')
   strings_in_files = check_input_source
-  calculated_values = calculate_values(strings_in_files)
-  values_and_total_values = prepare_output(calculated_values, options)
+  values_and_total_values = calculate_values(strings_in_files, options)
   output(values_and_total_values)
 end
 
