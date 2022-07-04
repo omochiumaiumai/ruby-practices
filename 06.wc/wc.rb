@@ -47,8 +47,7 @@ end
 
 def prepare_output(calculated_values, options)
   calculated_values = options_select(calculated_values, options)
-  total_values = calculated_values.values.map(&:sum)
-  calculated_values[:total_values] = total_values
+  calculated_values[:total_values] = calculated_values.values.map(&:sum)
   calculated_values
 end
 
