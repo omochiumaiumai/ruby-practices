@@ -34,10 +34,7 @@ def calculate_values(strings_in_files, options)
 
   values = lines.zip(words, byte_size).transpose
   values_and_total_values = { line_count: values[0], word_count: values[1], character_count: values[2] }
-  values_and_total_values = options_select(values_and_total_values, options)
-
-  values_and_total_values[:total_values] = values_and_total_values.values.map(&:sum)
-  values_and_total_values
+  options_select(values_and_total_values, options)
 end
 
 def options_select(values_hash, options)
@@ -50,6 +47,7 @@ def options_select(values_hash, options)
 end
 
 def output(values_and_total_values)
+  total_values = values_and_total_values.values.map(&:sum)
   values = values_and_total_values.each_value do |array|
     array.map! { |value| value.to_s.rjust(8, ' ') }
     array.join
@@ -59,17 +57,13 @@ def output(values_and_total_values)
   max_length = file_names.max.length
   file_names.map! { |file_name| file_name.ljust(max_length, ' ') }
 
-  total_values = values[:total_values]
-  total_values += [' ', 'total']
-  values.delete(:total_values)
   processed_values = values.values.push(file_names)
 
-  output = processed_values.transpose.map do |array|
+  processed_values.transpose.map do |array|
     array.insert(-2, ' ')
-    array.join
+    puts array.join
   end
-  puts output
-  puts total_values.join if output.count > 1
+  puts "#{total_values.map { |array| array.to_s.rjust(8, ' ') }.join} total" if file_names.count > 1
 end
 
 def main
