@@ -29,25 +29,21 @@ end
 
 def output(values_and_filenames, options)
   values_and_filenames = values_and_filenames[0]
-
-  line_option = options['l']
-  word_option = options['w']
-  character_count_option = options['c']
-
+  max_length = values_and_filenames[:file_names].map { _1.length }.max
   file_count = values_and_filenames[:file_names].count
 
   file_count.times do |count|
-    print values_and_filenames[:line_count][count].to_s.rjust(8) if line_option
-    print values_and_filenames[:word_count][count].to_s.rjust(8) if word_option
-    print values_and_filenames[:character_count][count].to_s.rjust(8) if character_count_option
-    print values_and_filenames[:file_names][count]
+    print values_and_filenames[:line_count][count].to_s.rjust(8) if options['l']
+    print values_and_filenames[:word_count][count].to_s.rjust(8) if options['w']
+    print values_and_filenames[:character_count][count].to_s.rjust(8) if options['c']
+    print values_and_filenames[:file_names][count].ljust(max_length)
 
     puts ''
   end
-  print values_and_filenames[:line_count].sum.to_s.rjust(8) if line_option && file_count > 1
-  print values_and_filenames[:word_count].sum.to_s.rjust(8) if word_option && file_count > 1
-  print values_and_filenames[:character_count].sum.to_s.rjust(8) if character_count_option && file_count > 1
-  print ' total' if file_count > 1
+  print values_and_filenames[:line_count].sum.to_s.rjust(8) if options['l'] && file_count > 1
+  print values_and_filenames[:word_count].sum.to_s.rjust(8) if options['w'] && file_count > 1
+  print values_and_filenames[:character_count].sum.to_s.rjust(8) if options['c'] && file_count > 1
+  print ' total'.ljust(max_length) if file_count > 1
 end
 
 def main
