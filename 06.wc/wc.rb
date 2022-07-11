@@ -40,7 +40,7 @@ def output(values_and_filenames, options)
     print values_and_filenames[:line_count][count].to_s.rjust(8) if line_option
     print values_and_filenames[:word_count][count].to_s.rjust(8) if word_option
     print values_and_filenames[:character_count][count].to_s.rjust(8) if character_count_option
-    print (values_and_filenames[:file_names][count]).to_s
+    print values_and_filenames[:file_names][count]
 
     puts ''
   end
