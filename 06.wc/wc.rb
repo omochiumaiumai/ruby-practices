@@ -43,12 +43,11 @@ def output(values_and_filenames, options)
     print (values_and_filenames[:file_names][count]).to_s
 
     puts ''
-
-    print values_and_filenames[:line_count].sum.to_s.rjust(8) if line_option && count > 1
-    print values_and_filenames[:word_count].sum.to_s.rjust(8) if word_option && count > 1
-    print values_and_filenames[:character_count].sum.to_s.rjust(8) if character_count_option && count > 1
-    print ' total' if count > 1
   end
+  print values_and_filenames[:line_count].sum.to_s.rjust(8) if line_option && file_count > 1
+  print values_and_filenames[:word_count].sum.to_s.rjust(8) if word_option && file_count > 1
+  print values_and_filenames[:character_count].sum.to_s.rjust(8) if character_count_option && file_count > 1
+  print ' total' if file_count > 1
 end
 
 def main
