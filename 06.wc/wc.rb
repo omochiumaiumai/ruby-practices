@@ -27,23 +27,34 @@ def calculate_values(filename_and_contents)
   end
 end
 
+def display_line?(options)
+  (!options['c'] && !options['w'] && !options['l'])
+end
+
 def output(values_and_filenames, options)
   values_and_filenames = values_and_filenames[0]
   max_length = values_and_filenames[:file_names].map { _1.length }.max
   file_count = values_and_filenames[:file_names].count
+  display_line = display_line?(options)
 
   file_count.times do |count|
-    print values_and_filenames[:line_count][count].to_s.rjust(8) if options['l']
-    print values_and_filenames[:word_count][count].to_s.rjust(8) if options['w']
-    print values_and_filenames[:character_count][count].to_s.rjust(8) if options['c']
+    print values_and_filenames[:line_count][count].to_s.rjust(8) if options['l'] || display_line
+    print values_and_filenames[:word_count][count].to_s.rjust(8) if options['w'] || display_line
+    print values_and_filenames[:character_count][count].to_s.rjust(8) if options['c'] || display_line
     print values_and_filenames[:file_names][count].ljust(max_length)
-
     puts ''
   end
-  print values_and_filenames[:line_count].sum.to_s.rjust(8) if options['l'] && file_count > 1
-  print values_and_filenames[:word_count].sum.to_s.rjust(8) if options['w'] && file_count > 1
-  print values_and_filenames[:character_count].sum.to_s.rjust(8) if options['c'] && file_count > 1
-  print ' total'.ljust(max_length) if file_count > 1
+end
+
+def output_total(values_and_filenames, options)
+  values_and_filenames = values_and_filenames[0]
+  display_line = display_line?(options)
+  max_length = values_and_filenames[:file_names].map { _1.length }.max
+
+  print values_and_filenames[:line_count].sum.to_s.rjust(8) if options['l'] || display_line
+  print values_and_filenames[:word_count].sum.to_s.rjust(8) if options['w'] || display_line
+  print values_and_filenames[:character_count].sum.to_s.rjust(8) if options['c'] || display_line
+  print ' total'.ljust(max_length)
 end
 
 def main
@@ -51,6 +62,7 @@ def main
   filename_and_contents = check_input_source
   values_and_filenames  = calculate_values(filename_and_contents)
   output(values_and_filenames, options)
+  output_total(values_and_filenames, options) if values_and_filenames[0][:file_names].count > 1
 end
 
 main
