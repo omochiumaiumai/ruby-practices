@@ -13,7 +13,7 @@ class Game
 
   def frame
     scores = []
-    frames = []
+    @frames = []
     set_frames = []
 
     split_scores.each do |score|
@@ -21,14 +21,14 @@ class Game
       scores << '0' if scores.size < 18 && score == 'X'
     end
 
-    scores.each_slice(2) { |score| frames << score }
+    scores.each_slice(2) { |score| @frames << score }
 
-    if frames.size > 10
-      frames[9].concat(frames.last)
-      frames.delete(frames.last)
+    if @frames.size > 10
+      @frames[9].concat(@frames.last)
+      @frames.delete(@frames.last)
     end
 
-    frames.each do |shot|
+    @frames.each do |shot|
       set_frames << Frame.new(shot[0], shot[1], shot[2])
     end
     set_frames
@@ -37,9 +37,8 @@ class Game
   def score_calc
     @frames = frame
     total_score = []
-
-    frames.each do |frame|
-      current_frame = frames.index(frame)
+    @frames.each do |frame|
+      current_frame = @frames.index(frame)
       total_score << if frame.strike? && current_frame < 9
                        frame.score + next_frame_score(@frames, frame)
                      elsif frame.spare? && current_frame < 9
@@ -56,12 +55,12 @@ class Game
     next_frame_index = frames.index(frame) + 1
     if frame.strike?
       if frames[next_frame_index].strike? && current_frame < 8
-        frames[next_frame_index].first_shot + frames[next_frame_index + 1].first_shot
+        frames[next_frame_index].first_shot.score + frames[next_frame_index + 1].first_shot.score
       else
-        frames[next_frame_index].first_shot + frames[next_frame_index].second_shot
+        frames[next_frame_index].first_shot.score + frames[next_frame_index].second_shot.score
       end
     else
-      frames[next_frame_index].first_shot
+      frames[next_frame_index].first_shot.score
     end
   end
 end
