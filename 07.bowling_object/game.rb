@@ -3,12 +3,12 @@
 require_relative 'frame'
 
 class Game
-  def initialize(scores)
-    @scores = scores
+  def initialize(mark)
+    @mark = mark
   end
 
   def split_scores
-    @scores.split(',')
+    @mark.split(',')
   end
 
   def frame
