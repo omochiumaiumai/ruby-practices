@@ -40,9 +40,9 @@ class Game
     @frames.each do |frame|
       current_frame = @frames.index(frame)
       total_score << if frame.strike? && current_frame < 9
-                       frame.score + next_frame_score(@frames, frame)
+                       frame.score + bonus_score(@frames, frame)
                      elsif frame.spare? && current_frame < 9
-                       frame.score + next_frame_score(@frames, frame)
+                       frame.score + bonus_score(@frames, frame)
                      else
                        frame.score
                      end
@@ -50,11 +50,11 @@ class Game
     puts total_score.sum
   end
 
-  def next_frame_score(frames, frame)
-    current_frame = frames.index(frame)
+  def bonus_score(frames, frame)
+    current_frame_index = frames.index(frame)
     next_frame_index = frames.index(frame) + 1
     if frame.strike?
-      if frames[next_frame_index].strike? && current_frame < 8
+      if frames[next_frame_index].strike? && current_frame_index < 8
         frames[next_frame_index].first_shot.score + frames[next_frame_index + 1].first_shot.score
       else
         frames[next_frame_index].first_shot.score + frames[next_frame_index].second_shot.score
