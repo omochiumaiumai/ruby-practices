@@ -7,35 +7,38 @@ class Game
     @mark = mark
   end
 
-  def split_scores
+  def split_marks
     @mark.split(',')
   end
 
-  def frame
-    scores = []
-    @frames = []
-    set_frames = []
+  def slice_marks
+    marks_array = []
+    frames = []
 
-    split_scores.each do |score|
-      scores << score
-      scores << '0' if scores.size < 18 && score == 'X'
+    split_marks.each do |mark|
+      marks_array << mark
+      frame = marks_array.size / 2
+      marks_array << '0' if frame < 9 && mark == 'X'
     end
 
-    scores.each_slice(2) { |score| @frames << score }
+    marks_array.each_slice(2) { |mark| frames << mark }
 
-    if @frames.size > 10
-      @frames[9].concat(@frames.last)
-      @frames.delete(@frames.last)
+    if frames.size > 10
+      frames[9].concat(frames.last)
+      frames.delete(frames.last)
     end
+    frames
+  end
 
-    @frames.each do |shot|
-      set_frames << Frame.new(shot[0], shot[1], shot[2])
+  def frame_array
+    frames = slice_marks
+    frames.map do |shot|
+      Frame.new(shot[0], shot[1], shot[2])
     end
-    set_frames
   end
 
   def calc_score
-    @frames = frame
+    @frames = frame_array
     total_score = []
     @frames.each do |frame|
       current_frame = @frames.index(frame)
