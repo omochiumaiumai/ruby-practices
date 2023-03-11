@@ -34,7 +34,7 @@ class Game
     set_frames
   end
 
-  def score_calc
+  def calc_score
     @frames = frame
     total_score = []
     @frames.each do |frame|
