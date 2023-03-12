@@ -17,8 +17,8 @@ class Game
 
     split_marks.each do |mark|
       marks << mark
-      frame = marks.size / 2
-      marks << '0' if frame < 9 && mark == 'X'
+      frame_size = marks.size / 2
+      marks << '0' if frame_size < 9 && mark == 'X'
     end
 
     marks.each_slice(2) { |mark| frames << mark }
@@ -31,18 +31,17 @@ class Game
   end
 
   def frame_array
-    frames = slice_marks
-    frames.map do |shot|
+    slice_marks.map do |shot|
       Frame.new(shot[0], shot[1], shot[2])
     end
   end
 
   def calc_score
     @frames = frame_array
-    total_score = []
+    scores = []
     @frames.each do |frame|
       current_frame = @frames.index(frame)
-      total_score << if frame.strike? && current_frame < 9
+      scores << if frame.strike? && current_frame < 9
                        frame.score + bonus_score(@frames, frame)
                      elsif frame.spare? && current_frame < 9
                        frame.score + bonus_score(@frames, frame)
@@ -50,7 +49,7 @@ class Game
                        frame.score
                      end
     end
-    puts total_score.sum
+    puts scores.sum
   end
 
   def bonus_score(frames, frame)
