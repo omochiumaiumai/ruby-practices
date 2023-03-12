@@ -11,17 +11,22 @@ class Game
     @mark.split(',')
   end
 
-  def slice_marks
-    marks = []
+  def score_palse
+    shots = []
+    scores = []
     frames = []
 
     split_marks.each do |mark|
-      marks << mark
-      frame_size = marks.size / 2
-      marks << '0' if frame_size < 9 && mark == 'X'
+      shots << Shot.new(mark)
     end
 
-    marks.each_slice(2) { |mark| frames << mark }
+    shots.each do |shot|
+      scores << shot.score
+      frame_size = scores.size / 2
+      scores << 0 if frame_size < 9 && shot.score == 10
+    end
+
+    scores.each_slice(2) { |score| frames << score }
 
     if frames.size > 10
       frames[9].concat(frames.last)
@@ -30,38 +35,33 @@ class Game
     frames
   end
 
-  def frame_array
-    slice_marks.map do |shot|
+  def frames
+    score_palse.map do |shot|
       Frame.new(shot[0], shot[1], shot[2])
     end
   end
 
   def calc_score
-    @frames = frame_array
+    @frames = frames
     scores = []
     @frames.each do |frame|
-      current_frame = @frames.index(frame)
-      scores << if frame.strike? && current_frame < 9
-                       frame.score + bonus_score(frame)
-                     elsif frame.spare? && current_frame < 9
-                       frame.score + bonus_score(frame)
-                     else
-                       frame.score
-                     end
+      scores << frame.score + bonus_score(frame)
     end
     puts scores.sum
   end
 
   def bonus_score(frame)
     current_frame_index = @frames.index(frame)
-    if frame.strike?
+    if frame.strike? && current_frame_index < 9
       if @frames[current_frame_index + 1].strike? && current_frame_index < 8
         @frames[current_frame_index + 1].first_shot.score + @frames[current_frame_index + 1 + 1].first_shot.score
       else
         @frames[current_frame_index + 1].first_shot.score + @frames[current_frame_index + 1].second_shot.score
       end
-    else
+    elsif frame.spare? && current_frame_index < 9
       @frames[current_frame_index + 1].first_shot.score
+    else
+      0
     end
   end
 end
