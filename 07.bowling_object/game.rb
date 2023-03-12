@@ -12,16 +12,16 @@ class Game
   end
 
   def slice_marks
-    marks_array = []
+    marks = []
     frames = []
 
     split_marks.each do |mark|
-      marks_array << mark
-      frame = marks_array.size / 2
-      marks_array << '0' if frame < 9 && mark == 'X'
+      marks << mark
+      frame = marks.size / 2
+      marks << '0' if frame < 9 && mark == 'X'
     end
 
-    marks_array.each_slice(2) { |mark| frames << mark }
+    marks.each_slice(2) { |mark| frames << mark }
 
     if frames.size > 10
       frames[9].concat(frames.last)
