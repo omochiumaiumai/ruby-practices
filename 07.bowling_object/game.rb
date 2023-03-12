@@ -53,15 +53,19 @@ class Game
   def bonus_score(frame)
     current_frame_index = @frames.index(frame)
     if frame.strike? && current_frame_index < 9
-      if @frames[current_frame_index + 1].strike? && current_frame_index < 8
-        @frames[current_frame_index + 1].first_shot.score + @frames[current_frame_index + 1 + 1].first_shot.score
-      else
-        @frames[current_frame_index + 1].first_shot.score + @frames[current_frame_index + 1].second_shot.score
-      end
+      next_frame_strike_bonus(current_frame_index)
     elsif frame.spare? && current_frame_index < 9
       @frames[current_frame_index + 1].first_shot.score
     else
       0
+    end
+  end
+
+  def next_frame_strike_bonus(current_frame_index)
+    if @frames[current_frame_index + 1].strike? && current_frame_index < 8
+      @frames[current_frame_index + 1].first_shot.score + @frames[current_frame_index + 1 + 1].first_shot.score
+    else
+      @frames[current_frame_index + 1].first_shot.score + @frames[current_frame_index + 1].second_shot.score
     end
   end
 end
