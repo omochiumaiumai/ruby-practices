@@ -3,4 +3,4 @@
 require_relative 'game'
 
 input = ARGV[0]
-Game.new(input).calc_score
+Game.new(input).output

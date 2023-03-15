@@ -47,7 +47,11 @@ class Game
     @frames.each do |frame|
       scores << frame.score + bonus_score(frame)
     end
-    puts scores.sum
+    scores.sum
+  end
+
+  def output
+    puts calc_score
   end
 
   def bonus_score(frame)
