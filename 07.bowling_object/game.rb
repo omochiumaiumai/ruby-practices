@@ -13,26 +13,20 @@ class Game
 
   def score_parse
     shots = []
-    scores = []
-    slice_scores = []
+    slice_shots = []
 
     split_marks.each do |mark|
+      frame_size = shots.size / 2
       shots << Shot.new(mark)
+      shots << Shot.new('0') if frame_size < 9 && mark == 'X'
     end
 
-    shots.each do |shot|
-      scores << shot.score
-      frame_size = scores.size / 2
-      scores << 0 if frame_size < 9 && shot.mark == 'X'
+    shots.each_slice(2) { |mark| slice_shots << mark }
+    if slice_shots.size > 10
+      slice_shots[9].concat(slice_shots.last)
+      slice_shots.delete(slice_shots.last)
     end
-
-    scores.each_slice(2) { |score| slice_scores << score }
-
-    if slice_scores.size > 10
-      slice_scores[9].concat(slice_scores.last)
-      slice_scores.delete(slice_scores.last)
-    end
-    slice_scores
+    slice_shots
   end
 
   def frames
