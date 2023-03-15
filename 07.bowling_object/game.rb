@@ -23,7 +23,7 @@ class Game
     shots.each do |shot|
       scores << shot.score
       frame_size = scores.size / 2
-      scores << 0 if frame_size < 9 && shot.score == 10
+      scores << 0 if frame_size < 9 && shot.mark == 'X'
     end
 
     scores.each_slice(2) { |score| frames << score }
