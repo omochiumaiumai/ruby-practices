@@ -29,19 +29,19 @@ class Game
     slice_shots
   end
 
-  def frames
+  def set_frames
     shots_parse.map do |shot|
       Frame.new(shot[0], shot[1], shot[2])
     end
   end
 
   def calc_score
-    @frames = frames
-    scores = []
+    @frames = set_frames
+    bonus_added_scores = []
     @frames.each do |frame|
-      scores << frame.score + bonus_score(frame)
+      bonus_added_scores << frame.score + bonus_score(frame)
     end
-    scores.sum
+    bonus_added_scores.sum
   end
 
   def scores_output
