@@ -11,7 +11,7 @@ class Game
     @mark.split(',')
   end
 
-  def score_parse
+  def shots_parse
     shots = []
     slice_shots = []
 
@@ -21,7 +21,7 @@ class Game
       shots << Shot.new('0') if frame_size < 9 && mark == 'X'
     end
 
-    shots.each_slice(2) { |mark| slice_shots << mark }
+    shots.each_slice(2) { |shot| slice_shots << shot }
     if slice_shots.size > 10
       slice_shots[9].concat(slice_shots.last)
       slice_shots.delete(slice_shots.last)
@@ -30,7 +30,7 @@ class Game
   end
 
   def frames
-    score_parse.map do |shot|
+    shots_parse.map do |shot|
       Frame.new(shot[0], shot[1], shot[2])
     end
   end
@@ -44,7 +44,7 @@ class Game
     scores.sum
   end
 
-  def output
+  def scores_output
     puts calc_score
   end
 

@@ -2,5 +2,5 @@
 
 require_relative 'game'
 
-input = ARGV[0]
-Game.new(input).output
+scores_text = ARGV[0]
+Game.new(scores_text).scores_output
