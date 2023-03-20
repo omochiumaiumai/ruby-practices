@@ -29,8 +29,8 @@ class Game
     slice_shots
   end
 
-  def set_frames
-    shots_parse.map do |shots|
+  def frames
+    @frames = shots_parse.map do |shots|
       Frame.new(shots[0], shots[1], shots[2])
     end
   end
