@@ -53,13 +53,13 @@ class Game
     return 0 if current_frame_index == 9
 
     if frame.strike?
-      next_frame_strike_bonus(current_frame_index)
+      strike_bonus(current_frame_index)
     elsif frame.spare?
       @frames[current_frame_index + 1].first_shot.score
     end
   end
 
-  def next_frame_strike_bonus(current_frame_index)
+  def strike_bonus(current_frame_index)
     if @frames[current_frame_index + 1].strike? && current_frame_index < 8
       @frames[current_frame_index + 1].first_shot.score + @frames[current_frame_index + 1 + 1].first_shot.score
     else
