@@ -29,14 +29,14 @@ class Game
     slice_shots
   end
 
-  def frames
+  def set_frames
     @frames = shots_from_marks.map do |shots|
       Frame.new(shots[0], shots[1], shots[2])
     end
   end
 
   def calc_score
-    bonus_added_scores = frames.map do |frame|
+    bonus_added_scores = set_frames.map do |frame|
       [frame.score, bonus_score(frame)].sum
     end
     bonus_added_scores.sum
