@@ -36,10 +36,8 @@ class Game
   end
 
   def calc_score
-    @frames = set_frames
-    bonus_added_scores = []
-    @frames.each do |frame|
-      bonus_added_scores << frame.score + bonus_score(frame)
+    bonus_added_scores = frames.map do |frame|
+      [frame.score, bonus_score(frame)].sum
     end
     bonus_added_scores.sum
   end
