@@ -11,7 +11,7 @@ class Game
     @mark.split(',')
   end
 
-  def shots_parse
+  def shots_from_marks
     shots = []
     slice_shots = []
 
@@ -30,7 +30,7 @@ class Game
   end
 
   def frames
-    @frames = shots_parse.map do |shots|
+    @frames = shots_from_marks.map do |shots|
       Frame.new(shots[0], shots[1], shots[2])
     end
   end
