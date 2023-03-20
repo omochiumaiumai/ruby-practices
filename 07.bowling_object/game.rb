@@ -30,8 +30,8 @@ class Game
   end
 
   def set_frames
-    shots_parse.map do |shot|
-      Frame.new(shot[0], shot[1], shot[2])
+    shots_parse.map do |shots|
+      Frame.new(shots[0], shots[1], shots[2])
     end
   end
 
