@@ -50,7 +50,7 @@ class Game
     current_frame_index = @frames.index(frame)
 
     return 0 unless frame.strike? || frame.spare?
-    return 0 unless current_frame_index < 9
+    return 0 if current_frame_index == 9
 
     if frame.strike?
       next_frame_strike_bonus(current_frame_index)
