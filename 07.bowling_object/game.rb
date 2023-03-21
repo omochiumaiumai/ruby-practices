@@ -39,7 +39,7 @@ class Game
     set_frames.sum { |frame| frame.score + bonus_score(frame) }
   end
 
-  def scores_output
+  def score_output
     puts calc_score
   end
 
