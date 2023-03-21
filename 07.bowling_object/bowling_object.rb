@@ -3,4 +3,4 @@
 require_relative 'game'
 
 scores_text = ARGV[0]
-Game.new(scores_text).score_output
+Game.new(scores_text).output_score
