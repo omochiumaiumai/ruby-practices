@@ -24,7 +24,8 @@ class LsCommand
     max_size = files.map { |file| file.size.to_s.length }.max
     max_date = files.map { |file| file.update_day.length }.max
     max_time = files.map { |file| file.update_time.length }.max
-    [max_permissions, max_hard_links, max_owner, max_group, max_size, max_date, max_time]
+    { permission: max_permissions, hard_link: max_hard_links, owner: max_owner,
+      group: max_group, size: max_size, date: max_date, time: max_time }
   end
 
   def get_total_blocks(files)
@@ -63,9 +64,10 @@ class LsCommand
       puts "total #{get_total_blocks(files)}"
 
       files.each do |file|
-        print "#{file.permission.ljust(columns_max_width[0])} #{file.hard_link.to_s.ljust(columns_max_width[1])}  "
-        print "#{file.owner_name.ljust(columns_max_width[2])} #{file.group_name.ljust(columns_max_width[3])}  #{file.size.to_s.rjust(columns_max_width[4])}  "
-        print "#{file.update_day.rjust(columns_max_width[5])} #{file.update_time.ljust(columns_max_width[6])} #{file.name}"
+        print "#{file.permission.ljust(columns_max_width[:permission])} #{file.hard_link.to_s.ljust(columns_max_width[:hard_link])}  "
+        print "#{file.owner_name.ljust(columns_max_width[:owner])} #{file.group_name.ljust(columns_max_width[:group])}  "
+        print "#{file.size.to_s.rjust(columns_max_width[:size])} #{file.update_day.rjust(columns_max_width[:date])} "
+        print "#{file.update_time.ljust(columns_max_width[:time])} #{file.name}"
         puts ''
       end
     else
