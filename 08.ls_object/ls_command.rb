@@ -60,7 +60,6 @@ class LsCommand
     columns_max_width = lists_column_max_width(files)
 
     if @options.long
-
       puts "total #{get_total_blocks(files)}"
 
       files.each do |file|
