@@ -10,7 +10,7 @@ class LsCommand
     files_names.map { |file_name| MyFile.new(file_name) }
   end
 
-  def select_files_with_options
+  def select_files
     files = select_files_in_directory
     files = files.reverse if @options.reverse
     files
@@ -56,7 +56,7 @@ class LsCommand
   end
 
   def output_files
-    files = select_files_with_options
+    files = select_files
     columns_max_width = lists_column_max_width(files)
 
     if @options.long
