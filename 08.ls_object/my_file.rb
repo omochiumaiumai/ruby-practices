@@ -2,7 +2,7 @@
 
 require 'etc'
 
-class MyFile
+class FileAndDirectory
   attr_reader :name
 
   def initialize(name)

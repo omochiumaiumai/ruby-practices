@@ -7,7 +7,7 @@ class LsCommand
 
   def select_files_in_directory
     files_names = @options.all ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-    files_names.map { |file_name| MyFile.new(file_name) }
+    files_names.map { |file_name| FileAndDirectory.new(file_name) }
   end
 
   def select_files
@@ -45,7 +45,7 @@ class LsCommand
     columns_max_width = []
     columns.each do |column|
       column_widths = column.map do |file|
-        if file.instance_of?(MyFile)
+        if file.instance_of?(FileAndDirectory)
           file.name.length + 1
         else
           file.to_s.length
@@ -75,8 +75,8 @@ class LsCommand
       columns_max_width = columns_max_width(columns)
       columns.each do |column|
         print "#{column[0].name.ljust(columns_max_width[0])}  "
-        print "#{column[1].instance_of?(MyFile) ? column[1].name.ljust(columns_max_width[1]) : column[1].ljust(columns_max_width[1])}  "
-        puts(column[2].instance_of?(MyFile) ? column[2].name.ljust(columns_max_width[2]) : column[2].ljust(columns_max_width[2]))
+        print "#{column[1]&.name&.ljust(columns_max_width[1])}  "
+        puts(column[2].instance_of?(FileAndDirectory) ? column[2].name.ljust(columns_max_width[2]) : column[2].ljust(columns_max_width[2]))
       end
     end
   end
