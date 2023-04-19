@@ -37,9 +37,11 @@ class LsCommand
       columns = files_list.create_columns
       columns_max_width = files_list.columns_max_width
       columns.each do |column|
-        print "#{column[0].name.ljust(columns_max_width[0])}  "
-        print "#{column[1]&.name&.ljust(columns_max_width[1])}  "
-        puts(column[2].instance_of?(FileAndDirectory) ? column[2].name.ljust(columns_max_width[2]) : column[2].ljust(columns_max_width[2]))
+        column.each_with_index do |file, index|
+          print file&.name&.ljust(columns_max_width[index]) || ''.ljust(columns_max_width[index])
+          print '  '
+        end
+        puts ''
       end
     end
   end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class List
+  COLUMNS_COUNT = 3
+
   def initialize(files)
     @files = files
   end
@@ -23,9 +25,9 @@ class List
 
   def create_columns
     columns = []
-    files_per_column = (@files.count / 3.0).ceil
+    files_per_column = (@files.count / COLUMNS_COUNT.to_f).ceil
     @files.each_slice(files_per_column) { |file| columns << file }
-    columns.last << '' while columns.last.size < files_per_column
+    columns.last << nil while columns.last.size < files_per_column
 
     columns.transpose
   end
