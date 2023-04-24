@@ -3,7 +3,7 @@
 require 'optparse'
 require_relative 'my_file'
 require_relative 'option'
-require_relative 'ls_command'
+require_relative 'list'
 
 options = ARGV.getopts('a', 'r', 'l')
-LsCommand.new(options).output_files
+List.new(options).output_list
