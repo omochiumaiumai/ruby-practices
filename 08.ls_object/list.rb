@@ -60,9 +60,8 @@ class List
 
   def long_format_list_output(files)
     columns_max_width = lists_column_max_width(files)
-    total_blocks = total_blocks(files)
 
-    puts "total #{total_blocks}"
+    puts "total #{total_blocks(files)}"
     files.each do |file|
       print "#{file.permission.ljust(columns_max_width[:permission])} #{file.hard_link.to_s.ljust(columns_max_width[:hard_link])}  "
       print "#{file.owner_name.ljust(columns_max_width[:owner])} #{file.group_name.ljust(columns_max_width[:group])}  "
