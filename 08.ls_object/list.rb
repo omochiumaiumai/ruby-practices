@@ -43,19 +43,8 @@ class List
     columns.transpose
   end
 
-  def columns_max_width(columns)
-    columns_max_width = []
-    columns.each do |column|
-      column_widths = column.map do |file|
-        if file.instance_of?(FileAndDirectory)
-          file.name.length + 1
-        else
-          file.to_s.length
-        end
-      end
-      columns_max_width << column_widths
-    end
-    columns_max_width.transpose.map(&:max)
+  def file_name_max_length(files)
+    files.map(&:name).max.length
   end
 
   def long_format_list_output(files)
@@ -73,10 +62,10 @@ class List
 
   def default_format_list_output(files)
     columns = create_columns(files)
-    columns_max_width = columns_max_width(columns)
+    file_name_max_length = file_name_max_length(files)
     columns.each do |column|
-      column.each_with_index do |file, index|
-        print file&.name&.ljust(columns_max_width[index]) || ''.ljust(columns_max_width[index])
+      column.each do |file|
+        print file&.name&.ljust(file_name_max_length) || ''.ljust(file_name_max_length)
         print '  '
       end
       puts ''
