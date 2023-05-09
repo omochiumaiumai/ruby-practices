@@ -7,6 +7,17 @@ class List
     @options = Option.new(options)
   end
 
+  def output_list
+    files = select_files
+    if @options.long
+      long_format_list_output(files)
+    else
+      default_format_list_output(files)
+    end
+  end
+
+  private
+
   def select_files_in_directory
     files_names = @options.all ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
     files_names.map { |file_name| FileAndDirectory.new(file_name) }
@@ -69,15 +80,6 @@ class List
         print '  '
       end
       puts ''
-    end
-  end
-
-  def output_list
-    files = select_files
-    if @options.long
-      long_format_list_output(files)
-    else
-      default_format_list_output(files)
     end
   end
 end
